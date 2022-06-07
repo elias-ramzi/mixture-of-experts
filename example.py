@@ -11,7 +11,7 @@ from torch import nn
 from torch.optim import Adam
 
 
-def train(x,y, model, loss_fn, optim):
+def train(x, y, model, loss_fn, optim):
     # model returns the prediction and the loss that encourages all experts to have equal importance and load
     y_hat, aux_loss = model(x.float())
     # calculate prediction loss
@@ -25,6 +25,7 @@ def train(x,y, model, loss_fn, optim):
     print("Training Results - loss: {:.2f}, aux_loss: {:.3f}".format(loss.item(), aux_loss.item()))
     return model
 
+
 def eval(x, y, model, loss_fn):
     model.eval()
     # model returns the prediction and the loss that encourages all experts to have equal importance and load
@@ -34,14 +35,13 @@ def eval(x, y, model, loss_fn):
     print("Evaluation Results - loss: {:.2f}, aux_loss: {:.3f}".format(loss.item(), aux_loss.item()))
 
 
-
 def dummy_data(batch_size, input_size, num_classes):
     # dummy input
     x = torch.rand(batch_size, input_size)
 
     # dummy target
     y = torch.randint(num_classes, (batch_size, 1)).squeeze(1)
-    return x,y
+    return x, y
 
 
 # arguments
@@ -54,12 +54,12 @@ k = 4
 
 # determine device
 if torch.cuda.is_available():
-	device = torch.device('cuda')
+    device = torch.device('cuda')
 else:
-	device = torch.device('cpu')
+    device = torch.device('cpu')
 
 # instantiate the MoE layer
-model = MoE(input_size, num_classes, num_experts,hidden_size, k=k, noisy_gating=True, device=device)
+model = MoE(input_size, num_classes, num_experts, hidden_size, k=k, noisy_gating=True)
 model = model.to(device)
 loss_fn = nn.NLLLoss()
 optim = Adam(model.parameters())

@@ -5,7 +5,6 @@ import torchvision
 import torchvision.transforms as transforms
 
 import torch.nn as nn
-import torch.nn.functional as F
 from moe import MoE
 import torch.optim as optim
 
@@ -13,12 +12,12 @@ transform = transforms.Compose(
     [transforms.ToTensor(),
      transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
+trainset = torchvision.datasets.CIFAR10(root='/local/SSD_DEEPLEARNING_1/image_retrieval', train=True,
                                         download=True, transform=transform)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=64,
                                           shuffle=True, num_workers=2)
 
-testset = torchvision.datasets.CIFAR10(root='./data', train=False,
+testset = torchvision.datasets.CIFAR10(root='/local/SSD_DEEPLEARNING_1/image_retrieval', train=False,
                                        download=True, transform=transform)
 testloader = torch.utils.data.DataLoader(testset, batch_size=64,
                                          shuffle=False, num_workers=2)
@@ -28,11 +27,11 @@ classes = ('plane', 'car', 'bird', 'cat',
 
 
 if torch.cuda.is_available():
-	device = torch.device('cuda')
+    device = torch.device('cuda')
 else:
-	device = torch.device('cpu')
+    device = torch.device('cpu')
 
-net = MoE(input_size=3072,output_size= 10, num_experts=10, hidden_size=256, noisy_gating=True, k=4, device=device)
+net = MoE(input_size=3072, output_size=10, num_experts=10, hidden_size=256, noisy_gating=True, k=4)
 net = net.to(device)
 
 criterion = nn.CrossEntropyLoss()
